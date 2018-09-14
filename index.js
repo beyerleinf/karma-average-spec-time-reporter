@@ -3,6 +3,8 @@ const c = require('ansi-colors')
 const SpecTimeReporter = function(baseReporterDecorator, config) {
   baseReporterDecorator(this);
 
+  const reporterConfig = config.specTimeReporter || {};
+
   let lastLongestTime = 0;
   let lastLongestBrowser = '';
   let lastLongestSpecResult;
@@ -12,7 +14,7 @@ const SpecTimeReporter = function(baseReporterDecorator, config) {
 
     fractions.push(`Browser: ${browser.name}`);
 
-    if (config.showBrowserId) {
+    if (reporterConfig.showBrowserId) {
       fractions.push(`(${browser.id})`);
     }
 
@@ -23,10 +25,10 @@ const SpecTimeReporter = function(baseReporterDecorator, config) {
     const avg = browser.lastResult.netTime / browser.lastResult.total;
     let averageTimeString;
 
-    if (config.enableThresholds) {
-      if (avg < config.warn) {
+    if (reporterConfig.enableThresholds) {
+      if (avg < reporterConfig.warn) {
         averageTimeString = c.green(`${avg} ms`)
-      } else if (avg > config.warn && avg < config.max) {
+      } else if (avg > reporterConfig.warn && avg < reporterConfig.max) {
         averageTimeString = c.yellow(`${avg} ms`)
       } else {
         averageTimeString = c.red(`${avg} ms`)
@@ -46,7 +48,7 @@ const SpecTimeReporter = function(baseReporterDecorator, config) {
       this.write(buildString(browser));
     }
 
-    if (config.showLongestSpec) {
+    if (reporterConfig.showLongestSpec) {
       const fractions = [];
 
       fractions.push('LONGEST SPEC:');
@@ -66,7 +68,7 @@ const SpecTimeReporter = function(baseReporterDecorator, config) {
     }
   };
 
-  if (config.showLongestSpec) {
+  if (reporterConfig.showLongestSpec) {
     this.specSuccess = (browser, result) => {
       if (result.time >= lastLongestTime) {
         lastLongestTime = result.time;

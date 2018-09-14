@@ -15,7 +15,7 @@ const createReporter = (config) => {
 describe('SpecTimeReporter', () => {
   describe('onRunComplete', () => {
     it('should write message for each browser', () => {
-      let reporter = createReporter({});
+      let reporter = createReporter();
 
       const browsersCollection = {
         browsers: [
@@ -56,7 +56,7 @@ describe('SpecTimeReporter', () => {
     });
 
     it('should write message with browserId when showBrowserId is truthy', () => {
-      let reporter = createReporter({showBrowserId: true});
+      let reporter = createReporter({specTimeReporter: {showBrowserId: true}});
 
       const browsersCollection = {
         browsers: [{
@@ -81,7 +81,7 @@ describe('SpecTimeReporter', () => {
     });
 
     it('should color average time red when enableThresholds is truthy and time exceeds max', () => {
-      let reporter = createReporter({enableThresholds: true, max: 100, warn: 50});
+      let reporter = createReporter({specTimeReporter: {enableThresholds: true, max: 100, warn: 50}});
 
       const browsersCollection = {
         browsers: [{
@@ -107,7 +107,7 @@ describe('SpecTimeReporter', () => {
 
     it('should color average time yellow when enableThresholds is truthy and time exceeds warn but does not exceed max',
        () => {
-         let reporter = createReporter({enableThresholds: true, max: 100, warn: 50});
+         let reporter = createReporter({specTimeReporter: {enableThresholds: true, max: 100, warn: 50}});
 
          const browsersCollection = {
            browsers: [{
@@ -132,7 +132,7 @@ describe('SpecTimeReporter', () => {
        });
 
     it('should color average time green when enableThresholds is truthy and time does not exceed warn', () => {
-      let reporter = createReporter({enableThresholds: true, max: 100, warn: 50});
+      let reporter = createReporter({specTimeReporter: {enableThresholds: true, max: 100, warn: 50}});
 
       const browsersCollection = {
         browsers: [{
@@ -157,7 +157,7 @@ describe('SpecTimeReporter', () => {
     });
 
     it('should write longest spec when showLongestSpec is truthy', () => {
-      let reporter = createReporter({showLongestSpec: true});
+      let reporter = createReporter({specTimeReporter: {showLongestSpec: true}});
 
       const browser = {
         id: 'id1',
@@ -188,7 +188,7 @@ describe('SpecTimeReporter', () => {
     });
 
     it('should write longest spec time when showLongestSpec is truthy and no longer spec succeeds', () => {
-      let reporter = createReporter({showLongestSpec: true});
+      let reporter = createReporter({specTimeReporter: {showLongestSpec: true}});
 
       const browser = {
         id: 'id1',

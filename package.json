@@ -1,6 +1,6 @@
 {
   "name": "karma-average-spec-time-reporter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Karma Reporter that reports the average time per spec.",
   "main": "index.js",
   "scripts": {

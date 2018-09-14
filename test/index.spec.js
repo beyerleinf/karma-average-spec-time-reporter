@@ -15,7 +15,7 @@ const createReporter = (config) => {
 describe('SpecTimeReporter', () => {
   describe('onRunComplete', () => {
     it('should write message for each browser', () => {
-      let reporter = createReporter();
+      let reporter = createReporter({});
 
       const browsersCollection = {
         browsers: [
@@ -50,9 +50,9 @@ describe('SpecTimeReporter', () => {
 
       expect(reporter.write.calledTwice).to.be.true;
       expect(reporter.write.firstCall.args[0])
-          .to.equal('Browser: Browser 1 | Total Time: 900 ms | Average Time: 90 ms \n');
+          .to.equal('Browser: Browser 1 | Total Time: 900 ms | Average Time: 90.000 ms \n');
       expect(reporter.write.secondCall.args[0])
-          .to.equal('Browser: Browser 2 | Total Time: 1250 ms | Average Time: 125 ms \n');
+          .to.equal('Browser: Browser 2 | Total Time: 1250 ms | Average Time: 125.000 ms \n');
     });
 
     it('should write message with browserId when showBrowserId is truthy', () => {
@@ -77,7 +77,7 @@ describe('SpecTimeReporter', () => {
 
       expect(reporter.write.calledOnce).to.be.true;
       expect(reporter.write.firstCall.args[0])
-          .to.equal('Browser: Browser 1 (id1) | Total Time: 900 ms | Average Time: 90 ms \n');
+          .to.equal('Browser: Browser 1 (id1) | Total Time: 900 ms | Average Time: 90.000 ms \n');
     });
 
     it('should color average time red when enableThresholds is truthy and time exceeds max', () => {
@@ -102,7 +102,7 @@ describe('SpecTimeReporter', () => {
 
       expect(reporter.write.calledOnce).to.be.true;
       expect(reporter.write.firstCall.args[0])
-          .to.equal('Browser: Browser 1 | Total Time: 1100 ms | Average Time: \u001b[31m110 ms\u001b[39m \n');
+          .to.equal('Browser: Browser 1 | Total Time: 1100 ms | Average Time: \u001b[31m110.000 ms\u001b[39m \n');
     });
 
     it('should color average time yellow when enableThresholds is truthy and time exceeds warn but does not exceed max',
@@ -128,7 +128,7 @@ describe('SpecTimeReporter', () => {
 
          expect(reporter.write.calledOnce).to.be.true;
          expect(reporter.write.firstCall.args[0])
-             .to.equal('Browser: Browser 1 | Total Time: 600 ms | Average Time: \u001b[33m60 ms\u001b[39m \n');
+             .to.equal('Browser: Browser 1 | Total Time: 600 ms | Average Time: \u001b[33m60.000 ms\u001b[39m \n');
        });
 
     it('should color average time green when enableThresholds is truthy and time does not exceed warn', () => {
@@ -153,7 +153,7 @@ describe('SpecTimeReporter', () => {
 
       expect(reporter.write.calledOnce).to.be.true;
       expect(reporter.write.firstCall.args[0])
-          .to.equal('Browser: Browser 1 | Total Time: 300 ms | Average Time: \u001b[32m30 ms\u001b[39m \n');
+          .to.equal('Browser: Browser 1 | Total Time: 300 ms | Average Time: \u001b[32m30.000 ms\u001b[39m \n');
     });
 
     it('should write longest spec when showLongestSpec is truthy', () => {
@@ -181,10 +181,10 @@ describe('SpecTimeReporter', () => {
 
       expect(reporter.write.calledTwice).to.be.true;
       expect(reporter.write.firstCall.args[0])
-          .to.equal('Browser: Browser 1 | Total Time: 300 ms | Average Time: 30 ms \n');
+          .to.equal('Browser: Browser 1 | Total Time: 300 ms | Average Time: 30.000 ms \n');
       expect(reporter.write.secondCall.args[0])
           .to.equal(
-              'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 2 (\u001b[31m50 ms\u001b[39m) \n');
+              'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 2 (\u001b[31m50.000 ms\u001b[39m) \n');
     });
 
     it('should write longest spec time when showLongestSpec is truthy and no longer spec succeeds', () => {
@@ -212,10 +212,10 @@ describe('SpecTimeReporter', () => {
 
       expect(reporter.write.calledTwice).to.be.true;
       expect(reporter.write.firstCall.args[0])
-          .to.equal('Browser: Browser 1 | Total Time: 300 ms | Average Time: 30 ms \n');
+          .to.equal('Browser: Browser 1 | Total Time: 300 ms | Average Time: 30.000 ms \n');
       expect(reporter.write.secondCall.args[0])
           .to.equal(
-              'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 1 (\u001b[31m5 ms\u001b[39m) \n');
+              'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 1 (\u001b[31m5.000 ms\u001b[39m) \n');
     });
   });
 });

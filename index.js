@@ -27,14 +27,14 @@ const SpecTimeReporter = function(baseReporterDecorator, config) {
 
     if (reporterConfig.enableThresholds) {
       if (avg < reporterConfig.warn) {
-        averageTimeString = c.green(`${avg} ms`)
+        averageTimeString = c.green(`${avg.toFixed(3)} ms`)
       } else if (avg > reporterConfig.warn && avg < reporterConfig.max) {
-        averageTimeString = c.yellow(`${avg} ms`)
+        averageTimeString = c.yellow(`${avg.toFixed(3)} ms`)
       } else {
-        averageTimeString = c.red(`${avg} ms`)
+        averageTimeString = c.red(`${avg.toFixed(3)} ms`)
       }
     } else {
-      averageTimeString = `${avg} ms`;
+      averageTimeString = `${avg.toFixed(3)} ms`;
     }
 
     fractions.push(`Average Time: ${averageTimeString}`);
@@ -61,7 +61,7 @@ const SpecTimeReporter = function(baseReporterDecorator, config) {
       }
 
       fractions.push(lastLongestSpecResult.fullName);
-      fractions.push('(' + c.red(`${lastLongestSpecResult.time} ms`) + ')');
+      fractions.push('(' + c.red(`${lastLongestSpecResult.time.toFixed(3)} ms`) + ')');
       fractions.push('\n');
 
       this.write(fractions.join(' '));

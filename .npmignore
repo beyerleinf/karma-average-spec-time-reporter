@@ -1,0 +1,7 @@
+.nyc_output
+coverage
+test
+.clang-format
+.gitignore
+.nycrc
+package-lock.json

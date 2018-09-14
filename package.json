@@ -1,0 +1,35 @@
+{
+  "name": "karma-average-spec-time-reporter",
+  "version": "1.0.0",
+  "description": "A Karma Reporter that reports the average time per spec.",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beyerleinf/karma-average-spec-time-reporter.git"
+  },
+  "keywords": [
+    "karma",
+    "spec-time",
+    "reporter"
+  ],
+  "author": "Fabian Beyerlein",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beyerleinf/karma-average-spec-time-reporter/issues"
+  },
+  "homepage": "https://github.com/beyerleinf/karma-average-spec-time-reporter#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "codecov": "^3.1.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
+    "sinon": "^6.3.3",
+    "standard-version": "^4.4.0"
+  },
+  "dependencies": {
+    "ansi-colors": "^3.0.5"
+  }
+}

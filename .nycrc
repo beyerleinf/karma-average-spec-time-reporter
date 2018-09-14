@@ -1,0 +1,19 @@
+{
+  "include": [
+    "index.js"
+  ],
+  "exclude": [
+    "test/**/*.spec.js"
+  ],
+  "extension": [
+    ".js"
+  ],
+  "reporter": [
+    "text-summary",
+    "html",
+    "json"
+  ],
+  "sourceMap": true,
+  "instrument": true,
+  "all": true
+}

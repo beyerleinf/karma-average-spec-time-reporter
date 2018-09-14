@@ -4,7 +4,8 @@
   "description": "A Karma Reporter that reports the average time per spec.",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "codecov": "codecov -f coverage/coverage-final.json"
   },
   "repository": {
     "type": "git",

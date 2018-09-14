@@ -45,6 +45,7 @@ config.set({
 ``` js
 config.set({
   specTimeReporter: {
+    showBrowserId: true,
     showLongestSpec: true,
     enableThresholds: true,
     max: 500,
@@ -55,6 +56,7 @@ config.set({
 
 |property|explanation|
 |-----|-----|
+|`showBrowserId`|Show the ID of the browser. For debugging purposes.|
 |`showLongestSpec`|Show the spec that took the longest including the browser in ran in.|
 |`enableThresholds`|Color the average time based on provided thresholds. If it doesn't exceed any thresholds it's colored green when this is enabled.|
 |`max`|If the average exceeds this amount of ms the average time will be colored red. `enableThresholds` must be `true`.|

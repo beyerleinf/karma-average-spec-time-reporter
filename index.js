@@ -60,7 +60,7 @@ const SpecTimeReporter = function(baseReporterDecorator, config) {
         fractions.push(`${suite} >`);
       }
 
-      fractions.push(lastLongestSpecResult.fullName);
+      fractions.push(lastLongestSpecResult.description);
       fractions.push('(' + c.red(`${lastLongestSpecResult.time.toFixed(3)} ms`) + ')');
       fractions.push('\n');
 

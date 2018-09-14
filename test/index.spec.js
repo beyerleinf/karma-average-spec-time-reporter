@@ -174,8 +174,8 @@ describe('SpecTimeReporter', () => {
 
       const browsersCollection = {browsers: [browser]};
 
-      reporter.specSuccess(browser, {fullName: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5});
-      reporter.specSuccess(browser, {fullName: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 50});
+      reporter.specSuccess(browser, {description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5});
+      reporter.specSuccess(browser, {description: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 50});
 
       reporter.onRunComplete(browsersCollection);
 
@@ -205,8 +205,8 @@ describe('SpecTimeReporter', () => {
 
       const browsersCollection = {browsers: [browser]};
 
-      reporter.specSuccess(browser, {fullName: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5});
-      reporter.specSuccess(browser, {fullName: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 2});
+      reporter.specSuccess(browser, {description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5});
+      reporter.specSuccess(browser, {description: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 2});
 
       reporter.onRunComplete(browsersCollection);
 

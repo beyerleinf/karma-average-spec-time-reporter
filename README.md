@@ -1,4 +1,7 @@
 # karma-average-spec-time-reporter
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/beyerleinf/karma-average-spec-time-reporter.svg)](https://greenkeeper.io/)
+
 A Karma Reporter that reports the average time per spec.
 
 | Node Version | Linux | Windows |

@@ -217,5 +217,13 @@ describe('SpecTimeReporter', () => {
           .to.equal(
               'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 1 (\u001b[31m5.000 ms\u001b[39m) \n');
     });
+
+    it('should not write if browsersCollection.browsers is undefined', () => {
+      let reporter = createReporter({specTimeReporter: {showLongestSpec: true}});
+
+      reporter.onRunComplete({});
+
+      expect(reporter.write.callCount).to.equal(0);
+    });
   });
 });

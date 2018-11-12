@@ -13,9 +13,9 @@
     "url": "git+https://github.com/beyerleinf/karma-average-spec-time-reporter.git"
   },
   "keywords": [
-    "karma",
     "spec-time",
-    "reporter"
+    "karma-plugin",
+    "karma-reporter"
   ],
   "author": "Fabian Beyerlein",
   "license": "MIT",

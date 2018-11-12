@@ -44,27 +44,29 @@ const SpecTimeReporter = function(baseReporterDecorator, config) {
   };
 
   this.onRunComplete = function(browsersCollection) {
-    for (const browser of browsersCollection.browsers) {
-      this.write(buildString(browser));
-    }
-
-    if (reporterConfig.showLongestSpec) {
-      const fractions = [];
-
-      fractions.push('LONGEST SPEC:');
-      fractions.push(`Browser: ${lastLongestBrowser}`);
-      fractions.push('|');
-      fractions.push(`Name:`);
-
-      for (const suite of lastLongestSpecResult.suite) {
-        fractions.push(`${suite} >`);
+    if (browsersCollection.browsers) {
+      for (const browser of browsersCollection.browsers) {
+        this.write(buildString(browser));
       }
 
-      fractions.push(lastLongestSpecResult.description);
-      fractions.push('(' + c.red(`${lastLongestSpecResult.time.toFixed(3)} ms`) + ')');
-      fractions.push('\n');
+      if (reporterConfig.showLongestSpec) {
+        const fractions = [];
 
-      this.write(fractions.join(' '));
+        fractions.push('LONGEST SPEC:');
+        fractions.push(`Browser: ${lastLongestBrowser}`);
+        fractions.push('|');
+        fractions.push(`Name:`);
+
+        for (const suite of lastLongestSpecResult.suite) {
+          fractions.push(`${suite} >`);
+        }
+
+        fractions.push(lastLongestSpecResult.description);
+        fractions.push('(' + c.red(`${lastLongestSpecResult.time.toFixed(3)} ms`) + ')');
+        fractions.push('\n');
+
+        this.write(fractions.join(' '));
+      }
     }
   };
 

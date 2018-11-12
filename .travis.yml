@@ -1,7 +1,7 @@
 sudo: required
 os:
 - linux
-- windows
+#- windows
 language: node_js
 node_js:
 - '6'
@@ -10,7 +10,8 @@ node_js:
 - '9'
 - '10'
 before_install:
-- npm install -g npm@latest
+# package-lock.json was introduced in npm@5
+- '[[ $(node -v) =~ ^v9.*$ ]] || npm install -g npm@latest' # skipped when using node 9
 - npm set progress false
 install:
 - npm install

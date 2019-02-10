@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/beyerleinf/karma-average-spec-time-reporter/compare/v1.0.4...v1.0.5) (2019-02-10)
+
+
+### Bug Fixes
+
+* Updated packages to fix SecVuln ([e52d881](https://github.com/beyerleinf/karma-average-spec-time-reporter/commit/e52d881))
+
+
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/beyerleinf/karma-average-spec-time-reporter/compare/v1.0.3...v1.0.4) (2018-11-12)
 

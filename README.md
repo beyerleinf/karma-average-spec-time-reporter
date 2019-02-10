@@ -1,6 +1,7 @@
 # karma-average-spec-time-reporter
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/beyerleinf/karma-average-spec-time-reporter.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/beyerleinf/karma-average-spec-time-reporter.svg?style=flat-square)](https://greenkeeper.io/)
+[![Known Vulnerabilities](https://snyk.io/test/github/beyerleinf/karma-average-spec-time-reporter/badge.svg?style=flat-square)](https://snyk.io/test/github/beyerleinf/karma-average-spec-time-reporter)
 
 A Karma Reporter that reports the average time per spec.
 

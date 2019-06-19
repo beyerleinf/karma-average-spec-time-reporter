@@ -31,7 +31,7 @@
     "sinon": "^7.2.7"
   },
   "dependencies": {
-    "ansi-colors": "^3.2.4"
+    "ansi-colors": "^4.0.1"
   },
   "files": [
     "index.js"

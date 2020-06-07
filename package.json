@@ -2,11 +2,10 @@
   "name": "karma-average-spec-time-reporter",
   "version": "1.0.6",
   "description": "A Karma Reporter that reports the average time per spec.",
-  "main": "index.js",
+  "main": "build/src/index.js",
   "scripts": {
     "test": "nyc mocha",
-    "codecov": "codecov -f coverage/coverage-final.json",
-    "release": "standard-version"
+    "codecov": "codecov -f coverage/coverage-final.json"
   },
   "repository": {
     "type": "git",
@@ -23,17 +22,9 @@
     "url": "https://github.com/beyerleinf/karma-average-spec-time-reporter/issues"
   },
   "homepage": "https://github.com/beyerleinf/karma-average-spec-time-reporter#readme",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "codecov": "^3.2.0",
-    "mocha": "^6.0.2",
-    "nyc": "^14.1.1",
-    "sinon": "^7.2.7"
-  },
-  "dependencies": {
-    "ansi-colors": "^4.1.1"
-  },
+  "devDependencies": {},
+  "dependencies": {},
   "files": [
-    "index.js"
+    "build/src/index.js"
   ]
 }

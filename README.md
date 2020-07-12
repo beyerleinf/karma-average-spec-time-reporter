@@ -1,47 +1,11 @@
 # karma-average-spec-time-reporter
 
-
+[![npm](https://img.shields.io/npm/v/karma-average-spec-time-reporter?style=flat-square)](https://www.npmjs.com/package/karma-average-spec-time-reporter)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/beyerleinf/karma-average-spec-time-reporter/CI?style=flat-square)](https://travis-ci.org/beyerleinf/karma-average-spec-time-reporter)
+[![Codecov](https://img.shields.io/codecov/c/github/beyerleinf/karma-average-spec-time-reporter?style=flat-square)](https://codecov.io/gh/beyerleinf/karma-average-spec-time-reporter)
 [![Known Vulnerabilities](https://snyk.io/test/github/beyerleinf/karma-average-spec-time-reporter/badge.svg?style=flat-square)](https://snyk.io/test/github/beyerleinf/karma-average-spec-time-reporter)
 
 A Karma Reporter that reports the average time per spec.
-
-<!--
-| Node Version | Linux              | Windows             |
-| ------------ | ------------------ | ------------------- |
-| 6            | [![Build1][1]][11] | [![Build1][6]][11]  |
-| 7            | [![Build1][2]][11] | [![Build1][7]][11]  |
-| 8            | [![Build1][3]][11] | [![Build1][8]][11]  |
-| 9            | [![Build1][4]][11] | [![Build1][9]][11]  |
-| 10           | [![Build1][5]][11] | [![Build1][10]][11] |
--->
-
-| Node Version | Linux              |
-| ------------ | ------------------ |
-| 6            | [![Build1][1]][11] |
-| 7            | [![Build1][2]][11] |
-| 8            | [![Build1][3]][11] |
-| 9            | [![Build1][4]][11] |
-| 10           | [![Build1][5]][11] |
-| 11           | [![Build1][6]][11] |
-| 12           | [![Build1][7]][11] |
-
-[1]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/1
-[2]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/2
-[3]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/3
-[4]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/4
-[5]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/5
-[6]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/6
-[7]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/7
-
-<!--
-[6]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/6
-[7]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/7
-[8]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/8
-[9]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/9
-[10]: https://travis-matrix-badges.herokuapp.com/repos/beyerleinf/karma-average-spec-time-reporter/branches/master/10
--->
-
-[11]: https://travis-ci.org/beyerleinf/karma-average-spec-time-reporter
 
 ## Installation
 
@@ -55,8 +19,8 @@ npm i --save-dev karma-average-spec-time-reporter
 
 ```js
 config.set({
-  plugins: [require("karma-average-spec-time-reporter")],
-  reporters: ["spec-time"]
+  plugins: [require('karma-average-spec-time-reporter')],
+  reporters: ['spec-time'],
 });
 ```
 
@@ -71,15 +35,15 @@ config.set({
     showLongestSpec: true,
     enableThresholds: true,
     max: 500,
-    warn: 250
-  }
+    warn: 250,
+  },
 });
 ```
 
-| property           | explanation                                                                                                                       |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| `showBrowserId`    | Show the ID of the browser. For debugging purposes.                                                                               |
-| `showLongestSpec`  | Show the spec that took the longest including the browser in ran in.                                                              |
-| `enableThresholds` | Color the average time based on provided thresholds. If it doesn't exceed any thresholds it's colored green when this is enabled. |
-| `max`              | If the average exceeds this amount of ms the average time will be colored red. `enableThresholds` must be `true`.                 |
-| `warn`             | If the average exceeds this amount of ms the average time will be colored yellow. `enableThresholds` must be `true`.              |
+| property                     | explanation                                                                                                                       |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `showBrowserId` (deprecated) | Show the ID of the browser. For debugging purposes.                                                                               |
+| `showLongestSpec`            | Show the spec that took the longest including the browser in ran in.                                                              |
+| `enableThresholds`           | Color the average time based on provided thresholds. If it doesn't exceed any thresholds it's colored green when this is enabled. |
+| `max`                        | If the average exceeds this amount of ms the average time will be colored red. `enableThresholds` must be `true`.                 |
+| `warn`                       | If the average exceeds this amount of ms the average time will be colored yellow. `enableThresholds` must be `true`.              |

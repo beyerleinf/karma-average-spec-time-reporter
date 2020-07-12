@@ -1,6 +1,6 @@
 {
   "extends": "@istanbuljs/nyc-config-typescript",
-  "reporter": ["text-summary", "html", "cobertura", "lcov"],
+  "reporter": ["text-summary", "html", "json"],
   "all": true,
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts"]

@@ -4,6 +4,5 @@
   "reporter": "spec",
   "inlineDiffs": true,
   "checkLeaks": true,
-  "forbidOnly": true,
   "spec": "src/**/*.spec.ts"
 }

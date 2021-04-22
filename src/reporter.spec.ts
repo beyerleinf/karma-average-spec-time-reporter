@@ -1,7 +1,6 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as sinon from 'sinon';
-import {specTimeReporterFactory} from './reporter';
-import {Utils} from './utils';
+import { specTimeReporterFactory } from './reporter';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -15,11 +14,9 @@ const createReporter = (config: any): any => {
 
 describe('SpecTimeReporter', () => {
   let sandbox: sinon.SinonSandbox;
-  let deprecateStub: sinon.SinonStub;
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
-    deprecateStub = sandbox.stub(Utils, 'deprecate');
   });
 
   afterEach(() => {
@@ -27,10 +24,10 @@ describe('SpecTimeReporter', () => {
   });
 
   describe('onRunComplete', () => {
-    it('should write message for each browser', () => {
+    it('should output correct output - single browser', () => {
       const reporter = createReporter({});
 
-      const browsersCollection = {
+      const browsers = {
         browsers: [
           {
             id: 'id1',
@@ -40,8 +37,43 @@ describe('SpecTimeReporter', () => {
               failed: 3,
               skipped: 2,
               total: 10,
-              totalTime: 1000,
-              netTime: 900,
+              totalTime: 2000,
+              netTime: 1234,
+            },
+          },
+        ],
+      };
+
+      reporter.onRunComplete(browsers);
+
+      expect(reporter.write.callCount).to.eql(4);
+      expect(reporter.write.getCalls()[0].args[0]).to.eql(
+        '============================== Average spec times ==============================\n'
+      );
+      expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+      expect(reporter.write.getCalls()[2].args[0]).to.eql(
+        `\t${browsers.browsers[0].name}: Total Time: 1.234 secs | Average Time: 0.123 secs\n`
+      );
+      expect(reporter.write.getCalls()[3].args[0]).to.eql(
+        '================================================================================\n\n'
+      );
+    });
+
+    it('should output correct output - multiple browser', () => {
+      const reporter = createReporter({});
+
+      const browsers = {
+        browsers: [
+          {
+            id: 'id1',
+            name: 'Browser 1',
+            lastResult: {
+              success: 5,
+              failed: 3,
+              skipped: 2,
+              total: 10,
+              totalTime: 2000,
+              netTime: 1234,
             },
           },
           {
@@ -52,191 +84,348 @@ describe('SpecTimeReporter', () => {
               failed: 3,
               skipped: 2,
               total: 10,
-              totalTime: 1100,
-              netTime: 1250,
+              totalTime: 3500,
+              netTime: 2345,
             },
           },
         ],
       };
 
-      reporter.onRunComplete(browsersCollection);
+      reporter.onRunComplete(browsers);
 
-      expect(reporter.write.calledTwice).to.be.true;
-      expect(reporter.write.firstCall.args[0]).to.equal(
-        'Browser: Browser 1 | Total Time: 900 ms | Average Time: 90.000 ms \n'
+      expect(reporter.write.callCount).to.eql(5);
+      expect(reporter.write.getCalls()[0].args[0]).to.eql(
+        '============================== Average spec times ==============================\n'
       );
-      expect(reporter.write.secondCall.args[0]).to.equal(
-        'Browser: Browser 2 | Total Time: 1250 ms | Average Time: 125.000 ms \n'
+      expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+      expect(reporter.write.getCalls()[2].args[0]).to.eql(
+        `\t${browsers.browsers[0].name}: Total Time: 1.234 secs | Average Time: 0.123 secs\n`
+      );
+      expect(reporter.write.getCalls()[3].args[0]).to.eql(
+        `\t${browsers.browsers[1].name}: Total Time: 2.345 secs | Average Time: 0.234 secs\n`
+      );
+      expect(reporter.write.getCalls()[4].args[0]).to.eql(
+        '================================================================================\n\n'
       );
     });
 
-    it('should write message with browserId when showBrowserId is true', () => {
-      const reporter = createReporter({specTimeReporter: {showBrowserId: true}});
+    describe('thresholds', () => {
+      it('should color average green when thresholds and colors are enabled and threshold not reached', () => {
+        const reporter = createReporter({
+          colors: true,
+          specTimeReporter: { enableThresholds: true, max: 100, warn: 50 },
+        });
 
-      const browsersCollection = {
-        browsers: [
-          {
-            id: 'id1',
-            name: 'Browser 1',
-            lastResult: {
-              success: 5,
-              failed: 3,
-              skipped: 2,
-              total: 10,
-              totalTime: 1000,
-              netTime: 900,
+        const browsers = {
+          browsers: [
+            {
+              id: 'id1',
+              name: 'Browser 1',
+              lastResult: {
+                success: 5,
+                failed: 3,
+                skipped: 2,
+                total: 10,
+                totalTime: 1000,
+                netTime: 300,
+              },
             },
-          },
-        ],
-      };
+          ],
+        };
 
-      reporter.onRunComplete(browsersCollection);
+        reporter.onRunComplete(browsers);
 
-      expect(reporter.write.calledOnce).to.be.true;
-      expect(reporter.write.firstCall.args[0]).to.equal(
-        'Browser: Browser 1 (id1) | Total Time: 900 ms | Average Time: 90.000 ms \n'
-      );
-    });
+        expect(reporter.write.callCount).to.eql(4);
+        expect(reporter.write.getCalls()[0].args[0]).to.eql(
+          '============================== Average spec times ==============================\n'
+        );
+        expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+        expect(reporter.write.getCalls()[2].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Total Time: 0.300 secs | Average Time: \u001b[32m0.030 secs\u001b[39m\n`
+        );
+        expect(reporter.write.getCalls()[3].args[0]).to.eql(
+          '================================================================================\n\n'
+        );
+      });
 
-    it('should show deprecate message when showBrowserId is true', () => {
-      const reporter = createReporter({specTimeReporter: {showBrowserId: true}});
+      it('should color average yellow when thresholds and colors are enabled and warn threshold is reached', () => {
+        const reporter = createReporter({
+          colors: true,
+          specTimeReporter: { enableThresholds: true, max: 100, warn: 50 },
+        });
 
-      const browsersCollection = {
-        browsers: [
-          {
-            id: 'id1',
-            name: 'Browser 1',
-            lastResult: {
-              success: 5,
-              failed: 3,
-              skipped: 2,
-              total: 10,
-              totalTime: 1000,
-              netTime: 900,
+        const browsers = {
+          browsers: [
+            {
+              id: 'id1',
+              name: 'Browser 1',
+              lastResult: {
+                success: 5,
+                failed: 3,
+                skipped: 2,
+                total: 10,
+                totalTime: 1000,
+                netTime: 600,
+              },
             },
-          },
-        ],
-      };
+          ],
+        };
 
-      reporter.onRunComplete(browsersCollection);
+        reporter.onRunComplete(browsers);
 
-      expect(deprecateStub.calledOnce).to.be.true;
-    });
+        expect(reporter.write.callCount).to.eql(4);
+        expect(reporter.write.getCalls()[0].args[0]).to.eql(
+          '============================== Average spec times ==============================\n'
+        );
+        expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+        expect(reporter.write.getCalls()[2].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Total Time: 0.600 secs | Average Time: \u001b[33m0.060 secs\u001b[39m\n`
+        );
+        expect(reporter.write.getCalls()[3].args[0]).to.eql(
+          '================================================================================\n\n'
+        );
+      });
 
-    it('should color average time red when enableThresholds is true and time exceeds max', () => {
-      const reporter = createReporter({colors: true, specTimeReporter: {enableThresholds: true, max: 100, warn: 50}});
+      it('should color average red when thresholds and colors are enabled and threshold is reached', () => {
+        const reporter = createReporter({
+          colors: true,
+          specTimeReporter: { enableThresholds: true, max: 100, warn: 50 },
+        });
 
-      const browsersCollection = {
-        browsers: [
-          {
-            id: 'id1',
-            name: 'Browser 1',
-            lastResult: {
-              success: 5,
-              failed: 3,
-              skipped: 2,
-              total: 10,
-              totalTime: 1000,
-              netTime: 1100,
+        const browsers = {
+          browsers: [
+            {
+              id: 'id1',
+              name: 'Browser 1',
+              lastResult: {
+                success: 5,
+                failed: 3,
+                skipped: 2,
+                total: 10,
+                totalTime: 1000,
+                netTime: 1100,
+              },
             },
-          },
-        ],
-      };
+          ],
+        };
 
-      reporter.onRunComplete(browsersCollection);
+        reporter.onRunComplete(browsers);
 
-      expect(reporter.write.calledOnce).to.be.true;
-      expect(reporter.write.firstCall.args[0]).to.equal(
-        'Browser: Browser 1 | Total Time: 1100 ms | Average Time: \u001b[31m110.000 ms\u001b[39m \n'
-      );
+        expect(reporter.write.callCount).to.eql(4);
+        expect(reporter.write.getCalls()[0].args[0]).to.eql(
+          '============================== Average spec times ==============================\n'
+        );
+        expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+        expect(reporter.write.getCalls()[2].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Total Time: 1.100 secs | Average Time: \u001b[31m0.110 secs\u001b[39m\n`
+        );
+        expect(reporter.write.getCalls()[3].args[0]).to.eql(
+          '================================================================================\n\n'
+        );
+      });
     });
 
-    it('should not color average time when enableThresholds is true but colors is false', () => {
-      const reporter = createReporter({colors: false, specTimeReporter: {enableThresholds: true, max: 100, warn: 50}});
+    describe('longest spec', () => {
+      it('should write longest spec when showLongestSpec is true - colors', () => {
+        const reporter = createReporter({
+          colors: true,
+          specTimeReporter: { showLongestSpec: true },
+        });
 
-      const browsersCollection = {
-        browsers: [
-          {
-            id: 'id1',
-            name: 'Browser 1',
-            lastResult: {
-              success: 5,
-              failed: 3,
-              skipped: 2,
-              total: 10,
-              totalTime: 1000,
-              netTime: 1100,
+        const browsers = {
+          browsers: [
+            {
+              id: 'id1',
+              name: 'Browser 1',
+              lastResult: {
+                success: 5,
+                failed: 3,
+                skipped: 2,
+                total: 10,
+                totalTime: 1000,
+                netTime: 300,
+              },
             },
-          },
-        ],
-      };
+          ],
+        };
 
-      reporter.onRunComplete(browsersCollection);
+        reporter.specSuccess(browsers.browsers[0], { description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5 });
+        reporter.specSuccess(browsers.browsers[0], { description: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 50 });
+        reporter.specSuccess(browsers.browsers[0], { description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5 });
 
-      expect(reporter.write.calledOnce).to.be.true;
-      expect(reporter.write.firstCall.args[0]).to.equal(
-        'Browser: Browser 1 | Total Time: 1100 ms | Average Time: 110.000 ms \n'
-      );
-    });
+        reporter.onRunComplete(browsers);
 
-    it('should color average time yellow when enableThresholds is true and time exceeds warn but does not exceed max', () => {
-      const reporter = createReporter({colors: true, specTimeReporter: {enableThresholds: true, max: 100, warn: 50}});
+        expect(reporter.write.callCount).to.eql(6);
+        expect(reporter.write.getCalls()[0].args[0]).to.eql(
+          '============================== Average spec times ==============================\n'
+        );
+        expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+        expect(reporter.write.getCalls()[2].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Total Time: 0.300 secs | Average Time: 0.030 secs\n`
+        );
+        expect(reporter.write.getCalls()[3].args[0]).to.eql('\nLongest spec:\n');
+        expect(reporter.write.getCalls()[4].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Suite 1 > Suite 2 > Name 2 (\u001b[31m0.050 secs\u001b[39m)\n`
+        );
+        expect(reporter.write.getCalls()[5].args[0]).to.eql(
+          '================================================================================\n\n'
+        );
+      });
 
-      const browsersCollection = {
-        browsers: [
-          {
-            id: 'id1',
-            name: 'Browser 1',
-            lastResult: {
-              success: 5,
-              failed: 3,
-              skipped: 2,
-              total: 10,
-              totalTime: 1000,
-              netTime: 600,
+      it('should write longest spec when showLongestSpec is true - no colors', () => {
+        const reporter = createReporter({
+          specTimeReporter: { showLongestSpec: true },
+        });
+
+        const browsers = {
+          browsers: [
+            {
+              id: 'id1',
+              name: 'Browser 1',
+              lastResult: {
+                success: 5,
+                failed: 3,
+                skipped: 2,
+                total: 10,
+                totalTime: 1000,
+                netTime: 300,
+              },
             },
-          },
-        ],
-      };
+          ],
+        };
 
-      reporter.onRunComplete(browsersCollection);
+        reporter.specSuccess(browsers.browsers[0], { description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5 });
+        reporter.specSuccess(browsers.browsers[0], { description: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 50 });
+        reporter.specSuccess(browsers.browsers[0], { description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5 });
 
-      expect(reporter.write.calledOnce).to.be.true;
-      expect(reporter.write.firstCall.args[0]).to.equal(
-        'Browser: Browser 1 | Total Time: 600 ms | Average Time: \u001b[33m60.000 ms\u001b[39m \n'
-      );
+        reporter.onRunComplete(browsers);
+
+        expect(reporter.write.callCount).to.eql(6);
+        expect(reporter.write.getCalls()[0].args[0]).to.eql(
+          '============================== Average spec times ==============================\n'
+        );
+        expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+        expect(reporter.write.getCalls()[2].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Total Time: 0.300 secs | Average Time: 0.030 secs\n`
+        );
+        expect(reporter.write.getCalls()[3].args[0]).to.eql('\nLongest spec:\n');
+        expect(reporter.write.getCalls()[4].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Suite 1 > Suite 2 > Name 2 (0.050 secs)\n`
+        );
+        expect(reporter.write.getCalls()[5].args[0]).to.eql(
+          '================================================================================\n\n'
+        );
+      });
     });
 
-    it('should color average time green when enableThresholds is true and time does not exceed warn', () => {
-      const reporter = createReporter({colors: true, specTimeReporter: {enableThresholds: true, max: 100, warn: 50}});
+    describe('deprecations', () => {
+      it('should print deprecation when showBrowserId is present in config - colors', () => {
+        const reporter = createReporter({ colors: true, specTimeReporter: { showBrowserId: true } });
 
-      const browsersCollection = {
-        browsers: [
-          {
-            id: 'id1',
-            name: 'Browser 1',
-            lastResult: {
-              success: 5,
-              failed: 3,
-              skipped: 2,
-              total: 10,
-              totalTime: 1000,
-              netTime: 300,
+        const browsers = {
+          browsers: [
+            {
+              id: 'id1',
+              name: 'Browser 1',
+              lastResult: {
+                success: 5,
+                failed: 3,
+                skipped: 2,
+                total: 10,
+                totalTime: 2000,
+                netTime: 1234,
+              },
             },
-          },
-        ],
-      };
+          ],
+        };
 
-      reporter.onRunComplete(browsersCollection);
+        reporter.onRunComplete(browsers);
 
-      expect(reporter.write.calledOnce).to.be.true;
-      expect(reporter.write.firstCall.args[0]).to.equal(
-        'Browser: Browser 1 | Total Time: 300 ms | Average Time: \u001b[32m30.000 ms\u001b[39m \n'
-      );
+        expect(reporter.write.callCount).to.eql(5);
+        expect(reporter.write.getCalls()[0].args[0]).to.eql(
+          '============================== Average spec times ==============================\n'
+        );
+        expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+        expect(reporter.write.getCalls()[2].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Total Time: 1.234 secs | Average Time: 0.123 secs\n`
+        );
+        expect(reporter.write.getCalls()[3].args[0]).to.eql('\u001b[33m\nshowBrowserId is deprecated.\n\u001b[39m');
+        expect(reporter.write.getCalls()[4].args[0]).to.eql(
+          '================================================================================\n\n'
+        );
+      });
+
+      it('should print deprecation when showBrowserId is present in config - no colors', () => {
+        const reporter = createReporter({ specTimeReporter: { showBrowserId: true } });
+
+        const browsers = {
+          browsers: [
+            {
+              id: 'id1',
+              name: 'Browser 1',
+              lastResult: {
+                success: 5,
+                failed: 3,
+                skipped: 2,
+                total: 10,
+                totalTime: 2000,
+                netTime: 1234,
+              },
+            },
+          ],
+        };
+
+        reporter.onRunComplete(browsers);
+
+        expect(reporter.write.callCount).to.eql(5);
+        expect(reporter.write.getCalls()[0].args[0]).to.eql(
+          '============================== Average spec times ==============================\n'
+        );
+        expect(reporter.write.getCalls()[1].args[0]).to.eql('Browsers:\n');
+        expect(reporter.write.getCalls()[2].args[0]).to.eql(
+          `\t${browsers.browsers[0].name}: Total Time: 1.234 secs | Average Time: 0.123 secs\n`
+        );
+        expect(reporter.write.getCalls()[3].args[0]).to.eql('\nshowBrowserId is deprecated.\n');
+        expect(reporter.write.getCalls()[4].args[0]).to.eql(
+          '================================================================================\n\n'
+        );
+      });
     });
 
-    it('should write longest spec when showLongestSpec is true', () => {
-      const reporter = createReporter({colors: true, specTimeReporter: {showLongestSpec: true}});
+    // it('should write longest spec time when showLongestSpec is true and no longer spec succeeds', () => {
+    //   const reporter = createReporter({ colors: true, specTimeReporter: { showLongestSpec: true } });
+
+    //   const browser = {
+    //     id: 'id1',
+    //     name: 'Browser 1',
+    //     lastResult: {
+    //       success: 5,
+    //       failed: 3,
+    //       skipped: 2,
+    //       total: 10,
+    //       totalTime: 1000,
+    //       netTime: 300,
+    //     },
+    //   };
+
+    //   const browsersCollection = { browsers: [browser] };
+
+    //   reporter.specSuccess(browser, { description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5 });
+    //   reporter.specSuccess(browser, { description: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 2 });
+
+    //   reporter.onRunComplete(browsersCollection);
+
+    //   expect(reporter.write.calledTwice).to.be.true;
+    //   expect(reporter.write.firstCall.args[0]).to.equal(
+    //     'Browser: Browser 1 | Total Time: 300 ms | Average Time: 30.000 ms \n'
+    //   );
+    //   expect(reporter.write.secondCall.args[0]).to.equal(
+    //     'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 1 (\u001b[31m5.000 ms\u001b[39m) \n'
+    //   );
+    // });
+
+    it('should not count spec times when showLongestSpec is false', () => {
+      const reporter = createReporter({ colors: true, specTimeReporter: { showLongestSpec: false } });
 
       const browser = {
         id: 'id1',
@@ -251,74 +440,10 @@ describe('SpecTimeReporter', () => {
         },
       };
 
-      const browsersCollection = {browsers: [browser]};
+      reporter.specSuccess(browser, { description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5 });
 
-      reporter.specSuccess(browser, {description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5});
-      reporter.specSuccess(browser, {description: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 50});
-
-      reporter.onRunComplete(browsersCollection);
-
-      expect(reporter.write.calledTwice).to.be.true;
-      expect(reporter.write.firstCall.args[0]).to.equal(
-        'Browser: Browser 1 | Total Time: 300 ms | Average Time: 30.000 ms \n'
-      );
-      expect(reporter.write.secondCall.args[0]).to.equal(
-        'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 2 (\u001b[31m50.000 ms\u001b[39m) \n'
-      );
-    });
-
-    it('should write longest spec time when showLongestSpec is true and no longer spec succeeds', () => {
-      const reporter = createReporter({colors: true, specTimeReporter: {showLongestSpec: true}});
-
-      const browser = {
-        id: 'id1',
-        name: 'Browser 1',
-        lastResult: {
-          success: 5,
-          failed: 3,
-          skipped: 2,
-          total: 10,
-          totalTime: 1000,
-          netTime: 300,
-        },
-      };
-
-      const browsersCollection = {browsers: [browser]};
-
-      reporter.specSuccess(browser, {description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5});
-      reporter.specSuccess(browser, {description: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 2});
-
-      reporter.onRunComplete(browsersCollection);
-
-      expect(reporter.write.calledTwice).to.be.true;
-      expect(reporter.write.firstCall.args[0]).to.equal(
-        'Browser: Browser 1 | Total Time: 300 ms | Average Time: 30.000 ms \n'
-      );
-      expect(reporter.write.secondCall.args[0]).to.equal(
-        'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 1 (\u001b[31m5.000 ms\u001b[39m) \n'
-      );
-    });
-
-    it('should not times when showLongestSpec is false', () => {
-      const reporter = createReporter({colors: true, specTimeReporter: {showLongestSpec: false}});
-
-      const browser = {
-        id: 'id1',
-        name: 'Browser 1',
-        lastResult: {
-          success: 5,
-          failed: 3,
-          skipped: 2,
-          total: 10,
-          totalTime: 1000,
-          netTime: 300,
-        },
-      };
-
-      reporter.specSuccess(browser, {description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5});
-
-      expect(reporter.lastLongestTime).to.eq(0);
-      expect(reporter.lastLongestBrowser).to.eq('');
+      expect(reporter.lastLongestTime).to.eql(0);
+      expect(reporter.lastLongestBrowser).to.eql('');
       expect(reporter.longestSpec).to.be.undefined;
     });
 
@@ -330,11 +455,11 @@ describe('SpecTimeReporter', () => {
     });
 
     it('should not write if browsersCollection.browsers is undefined', () => {
-      const reporter = createReporter({specTimeReporter: {showLongestSpec: true}});
+      const reporter = createReporter({ specTimeReporter: { showLongestSpec: true } });
 
       reporter.onRunComplete({});
 
-      expect(reporter.write.callCount).to.equal(0);
+      expect(reporter.write.callCount).to.eql(0);
     });
   });
 });

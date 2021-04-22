@@ -1,8 +1,8 @@
-import {Browser, Browsers, SpecResult} from './interfaces/karma';
-import {SpecTimeReporterOptions} from './interfaces/spec-time-reporter-options';
-import {Utils} from './utils';
+import { Browser, Browsers, SpecResult } from './interfaces/karma';
+import { SpecTimeReporterOptions } from './interfaces/spec-time-reporter-options';
+import { Utils } from './utils';
 
-const COLORS: {[key: string]: [number, number]} = {
+const COLORS: { [key: string]: [number, number] } = {
   red: [31, 39],
   yellow: [33, 39],
   green: [32, 39],
@@ -20,30 +20,34 @@ class SpecTimeReporter {
 
   static onRunComplete(browsers: Browsers) {
     if (browsers.browsers) {
+      this.print('============================== Average spec times ==============================\n');
+      this.print('Browsers:\n');
+
       for (const browser of browsers.browsers) {
-        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-        (this as any).write(this.buildString(browser));
+        this.printBrowserString(browser);
       }
 
       if (this.options.showLongestSpec) {
-        const fractions = [];
-
-        fractions.push('LONGEST SPEC:');
-        fractions.push(`Browser: ${this.lastLongestBrowser}`);
-        fractions.push('|');
-        fractions.push('Name:');
+        this.print('\nLongest spec:\n');
+        const longestSpecName = [];
 
         for (const suite of this.longestSpec.suite) {
-          fractions.push(`${suite} >`);
+          longestSpecName.push(`${suite} >`);
         }
 
-        fractions.push(this.longestSpec.description);
-        fractions.push(`(${this.getColoredString(`${this.longestSpec.time.toFixed(3)} ms`, COLORS.red)})`);
-        fractions.push('\n');
+        longestSpecName.push(this.longestSpec.description);
 
-        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-        (this as any).write(fractions.join(' '));
+        const longestSpecTime = `(${this.getColoredString(
+          `${(this.longestSpec.time / 1000).toFixed(3)} secs`,
+          COLORS.red
+        )})`;
+
+        this.print(`\t${this.lastLongestBrowser}: ${longestSpecName.join(' ')} ${longestSpecTime}\n`);
       }
+
+      this.printDeprecations();
+
+      this.print('================================================================================\n\n');
     }
   }
 
@@ -57,39 +61,27 @@ class SpecTimeReporter {
     }
   }
 
-  private static buildString(browser: Browser) {
-    const fractions = [];
-
-    fractions.push(`Browser: ${browser.name}`);
-
-    if (this.options.showBrowserId) {
-      Utils.deprecate(
-        'showBrowserId will be deprecated in the next release. The browser ID will not be shown anymore.'
-      );
-      fractions.push(`(${browser.id})`);
-    }
-
-    fractions.push('|', `Total Time: ${browser.lastResult.netTime} ms`, '|');
-
+  private static printBrowserString(browser: Browser) {
     const avg = browser.lastResult.netTime / browser.lastResult.total;
     let averageTimeString;
 
+    const avgTimeString = `${(avg / 1000).toFixed(3)} secs`;
+
     if (this.options.enableThresholds) {
       if (avg < this.options.warn) {
-        averageTimeString = this.getColoredString(`${avg.toFixed(3)} ms`, COLORS.green);
+        averageTimeString = this.getColoredString(avgTimeString, COLORS.green);
       } else if (avg > this.options.warn && avg < this.options.max) {
-        averageTimeString = this.getColoredString(`${avg.toFixed(3)} ms`, COLORS.yellow);
+        averageTimeString = this.getColoredString(avgTimeString, COLORS.yellow);
       } else {
-        averageTimeString = this.getColoredString(`${avg.toFixed(3)} ms`, COLORS.red);
+        averageTimeString = this.getColoredString(avgTimeString, COLORS.red);
       }
     } else {
-      averageTimeString = `${avg.toFixed(3)} ms`;
+      averageTimeString = avgTimeString;
     }
 
-    fractions.push(`Average Time: ${averageTimeString}`);
-    fractions.push('\n');
+    const browserNetTime = (browser.lastResult.netTime / 1000).toFixed(3);
 
-    return fractions.join(' ');
+    this.print(`\t${browser.name}: Total Time: ${browserNetTime} secs | Average Time: ${averageTimeString}\n`);
   }
 
   private static getColoredString(arg: string, color: [number, number]) {
@@ -99,6 +91,18 @@ class SpecTimeReporter {
 
     return arg;
   }
+
+  private static printDeprecations() {
+    if (this.options.showBrowserId) {
+      this.print(this.getColoredString('\nshowBrowserId is deprecated.\n', COLORS.yellow));
+    }
+  }
+
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  private static print(...args: any[]) {
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    (this as any).write(...args);
+  }
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -107,5 +111,8 @@ export function specTimeReporterFactory(baseReporterDecorator: Function, config:
   baseReporterDecorator(base);
   const reporter = Utils.classToObject(SpecTimeReporter);
 
-  return Object.assign(base, reporter, {options: config.specTimeReporter || {}, enableColors: config.colors || false});
+  return Object.assign(base, reporter, {
+    options: config.specTimeReporter || {},
+    enableColors: config.colors || false,
+  });
 }

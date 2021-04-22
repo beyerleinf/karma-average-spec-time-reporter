@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 9.x, 10.x, 11.x, 12.x, 13.x, 14.x, 15.x]
+        node-version: [10.x, 11.x, 12.x, 13.x, 14.x, 15.x]
 
     steps:
       - name: Checkout
@@ -26,6 +26,8 @@ jobs:
             ${{ runner.os }}-node-
       - name: Install
         run: npm ci
+      - name: Audit
+        run: npm audit
       - name: Test
         run: npm test
       - uses: codecov/codecov-action@v1

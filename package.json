@@ -2,11 +2,17 @@
   "name": "karma-average-spec-time-reporter",
   "version": "1.0.6",
   "description": "A Karma Reporter that reports the average time per spec.",
-  "main": "index.js",
+  "main": "build/src/index.js",
   "scripts": {
     "test": "nyc mocha",
     "codecov": "codecov -f coverage/coverage-final.json",
-    "release": "standard-version"
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint",
+    "lint": "gts lint"
   },
   "repository": {
     "type": "git",
@@ -24,16 +30,22 @@
   },
   "homepage": "https://github.com/beyerleinf/karma-average-spec-time-reporter#readme",
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^15.12.2",
+    "@types/sinon": "^10.0.2",
     "chai": "^4.2.0",
-    "codecov": "^3.2.0",
-    "mocha": "^6.0.2",
-    "nyc": "^14.1.1",
-    "sinon": "^7.2.7"
-  },
-  "dependencies": {
-    "ansi-colors": "^4.1.1"
+    "codecov": "^3.7.0",
+    "gts": "^3.1.0",
+    "mocha": "^9.0.0",
+    "nyc": "^15.1.0",
+    "sinon": "^11.1.1",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.0.3"
   },
   "files": [
-    "index.js"
+    "build/src/index.js"
   ]
 }

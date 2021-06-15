@@ -1,6 +1,18 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.1.0](https://github.com/beyerleinf/karma-average-spec-time-reporter/compare/v1.0.6...v1.1.0) (2021-06-15)
+
+
+### Features
+
+* Update reporter output ([378a26f](https://github.com/beyerleinf/karma-average-spec-time-reporter/commit/378a26fee1cd611c1dfca58f43910daa15f0290a))
+
+
+### Bug Fixes
+
+* **package:** update ansi-colors to version 4.1.1 ([7843b9a](https://github.com/beyerleinf/karma-average-spec-time-reporter/commit/7843b9aa7fefd58242e3010fe2ea0f228e3b3100)), closes [#11](https://github.com/beyerleinf/karma-average-spec-time-reporter/issues/11)
 
 ## [1.0.6](https://github.com/beyerleinf/karma-average-spec-time-reporter/compare/v1.0.5...v1.0.6) (2019-03-17)
 

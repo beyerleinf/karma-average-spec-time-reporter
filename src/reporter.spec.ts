@@ -392,38 +392,6 @@ describe('SpecTimeReporter', () => {
       });
     });
 
-    // it('should write longest spec time when showLongestSpec is true and no longer spec succeeds', () => {
-    //   const reporter = createReporter({ colors: true, specTimeReporter: { showLongestSpec: true } });
-
-    //   const browser = {
-    //     id: 'id1',
-    //     name: 'Browser 1',
-    //     lastResult: {
-    //       success: 5,
-    //       failed: 3,
-    //       skipped: 2,
-    //       total: 10,
-    //       totalTime: 1000,
-    //       netTime: 300,
-    //     },
-    //   };
-
-    //   const browsersCollection = { browsers: [browser] };
-
-    //   reporter.specSuccess(browser, { description: 'Name 1', suite: ['Suite 1', 'Suite 2'], time: 5 });
-    //   reporter.specSuccess(browser, { description: 'Name 2', suite: ['Suite 1', 'Suite 2'], time: 2 });
-
-    //   reporter.onRunComplete(browsersCollection);
-
-    //   expect(reporter.write.calledTwice).to.be.true;
-    //   expect(reporter.write.firstCall.args[0]).to.equal(
-    //     'Browser: Browser 1 | Total Time: 300 ms | Average Time: 30.000 ms \n'
-    //   );
-    //   expect(reporter.write.secondCall.args[0]).to.equal(
-    //     'LONGEST SPEC: Browser: Browser 1 | Name: Suite 1 > Suite 2 > Name 1 (\u001b[31m5.000 ms\u001b[39m) \n'
-    //   );
-    // });
-
     it('should not count spec times when showLongestSpec is false', () => {
       const reporter = createReporter({ colors: true, specTimeReporter: { showLongestSpec: false } });
 

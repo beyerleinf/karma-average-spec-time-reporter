@@ -30,7 +30,12 @@ jobs:
         run: npm audit
       - name: Test
         run: npm test
-      - uses: codecov/codecov-action@v1
+      - name: Compile
+        run: npm run compile
+      - name: Lint
+        run: npm run lint
+      - name: Publish Code Coverage
+        uses: codecov/codecov-action@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/coverage-final.json
+          files: ./coverage/coverage-final.json
+          fail_ci_if_error: true

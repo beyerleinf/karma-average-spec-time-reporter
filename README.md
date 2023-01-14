@@ -2,9 +2,9 @@
 
 > A Karma Reporter that reports the average time per spec.
 
-[![Maintenance](https://img.shields.io/maintenance/yes/2022style=flat-square)](https://github.com/beyerleinf/karma-average-spec-time-reporter)
+[![Maintenance](https://img.shields.io/maintenance/yes/2023?style=flat-square)](https://github.com/beyerleinf/karma-average-spec-time-reporter)
 [![npm](https://img.shields.io/npm/v/karma-average-spec-time-reporter?style=flat-square)](https://www.npmjs.com/package/karma-average-spec-time-reporter)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/beyerleinf/karma-average-spec-time-reporter/CI?style=flat-square)](https://travis-ci.org/beyerleinf/karma-average-spec-time-reporter)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/beyerleinf/karma-average-spec-time-reporter/ci.yml?style=flat-square)](https://travis-ci.org/beyerleinf/karma-average-spec-time-reporter)
 [![Codecov](https://img.shields.io/codecov/c/github/beyerleinf/karma-average-spec-time-reporter?style=flat-square)](https://codecov.io/gh/beyerleinf/karma-average-spec-time-reporter)
 [![Known Vulnerabilities](https://snyk.io/test/github/beyerleinf/karma-average-spec-time-reporter/badge.svg?style=flat-square)](https://snyk.io/test/github/beyerleinf/karma-average-spec-time-reporter)
 
